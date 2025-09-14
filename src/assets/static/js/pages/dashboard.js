@@ -1,4 +1,4 @@
-import { get } from '../../js/api.js';
+import { get } from '../../../js/api.js';
 
 async function loadDashboardMetrics() {
   try {
@@ -187,3 +187,4 @@ chartIndia.render()
 chartEurope.render()
 chartProfileVisit.render()
 chartVisitorsProfile.render()
+

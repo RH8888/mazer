@@ -1,9 +1,11 @@
 import { API_BASE_URL } from './config.js';
 
-let authToken = null;
+const TOKEN_KEY = 'auth_token';
+let authToken = localStorage.getItem(TOKEN_KEY);
 
 export function setToken(token) {
   authToken = token;
+  localStorage.setItem(TOKEN_KEY, token);
 }
 
 export function getToken() {
@@ -12,6 +14,7 @@ export function getToken() {
 
 export function clearToken() {
   authToken = null;
+  localStorage.removeItem(TOKEN_KEY);
 }
 
 async function request(method, endpoint, data) {
