@@ -1,3 +1,23 @@
+async function loadDashboardMetrics() {
+  try {
+    const [agents, panels, services, settings] = await Promise.all([
+      window.apiClient.listAgents(),
+      window.apiClient.listPanels(),
+      window.apiClient.listServices(),
+      window.apiClient.listSettings(),
+    ]);
+
+    document.getElementById('agents-count').textContent = agents.length;
+    document.getElementById('panels-count').textContent = panels.length;
+    document.getElementById('services-count').textContent = services.length;
+    document.getElementById('settings-count').textContent = settings.length;
+  } catch (error) {
+    console.error('Failed to load dashboard metrics', error);
+  }
+}
+
+loadDashboardMetrics();
+
 var optionsProfileVisit = {
   annotations: {
     position: "back",
