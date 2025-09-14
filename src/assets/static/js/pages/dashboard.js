@@ -1,10 +1,12 @@
+import { get } from '../../js/api.js';
+
 async function loadDashboardMetrics() {
   try {
     const [agents, panels, services, settings] = await Promise.all([
-      window.apiClient.listAgents(),
-      window.apiClient.listPanels(),
-      window.apiClient.listServices(),
-      window.apiClient.listSettings(),
+      get('/admin/agents'),
+      get('/admin/panels'),
+      get('/admin/services'),
+      get('/admin/settings'),
     ]);
 
     document.getElementById('agents-count').textContent = agents.length;
