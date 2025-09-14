@@ -17,9 +17,10 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-fetch('/api/v1/admin/panels')
-  .then(response => response.json())
+<script type="module">
+import { get } from './assets/js/api.js';
+
+get('/admin/panels')
   .then(data => {
     document.getElementById('panels-data').textContent = JSON.stringify(data, null, 2);
   })

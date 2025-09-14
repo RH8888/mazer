@@ -17,9 +17,10 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-fetch('/api/v1/users')
-  .then(response => response.json())
+<script type="module">
+import { get } from './assets/js/api.js';
+
+get('/users')
   .then(data => {
     document.getElementById('users-data').textContent = JSON.stringify(data, null, 2);
   })
