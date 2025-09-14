@@ -1,0 +1,28 @@
+{% set title = 'Services' %}
+{% set filename = 'services.html' %}
+
+{% extends 'src/layouts/master.html' %}
+
+{% block content %}
+<div class="page-heading">
+  <h3>Services</h3>
+</div>
+<div class="page-content">
+  <section class="row">
+    <div class="col-12">
+      <pre id="services-data"></pre>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+fetch('/api/v1/admin/services')
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('services-data').textContent = JSON.stringify(data, null, 2);
+  })
+  .catch(err => console.error(err));
+</script>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% set title = 'Agents' %}
+{% set filename = 'agents.html' %}
+
+{% extends 'src/layouts/master.html' %}
+
+{% block content %}
+<div class="page-heading">
+  <h3>Agents</h3>
+</div>
+<div class="page-content">
+  <section class="row">
+    <div class="col-12">
+      <pre id="agents-data"></pre>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+fetch('/api/v1/admin/agents')
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('agents-data').textContent = JSON.stringify(data, null, 2);
+  })
+  .catch(err => console.error(err));
+</script>
+{% endblock %}
