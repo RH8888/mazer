@@ -1,0 +1,28 @@
+{% set title = 'Settings' %}
+{% set filename = 'settings.html' %}
+
+{% extends 'src/layouts/master.html' %}
+
+{% block content %}
+<div class="page-heading">
+  <h3>Settings</h3>
+</div>
+<div class="page-content">
+  <section class="row">
+    <div class="col-12">
+      <pre id="settings-data"></pre>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+fetch('/api/v1/admin/settings')
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('settings-data').textContent = JSON.stringify(data, null, 2);
+  })
+  .catch(err => console.error(err));
+</script>
+{% endblock %}
