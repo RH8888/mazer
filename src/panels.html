@@ -10,20 +10,75 @@
 <div class="page-content">
   <section class="row">
     <div class="col-12">
+      <button id="panels-list" class="btn btn-primary mb-3">List Panels</button>
       <pre id="panels-data"></pre>
+      <hr/>
+      <h5>Create</h5>
+      <form id="panels-create" class="mb-3">
+        <textarea id="panels-create-json" class="form-control" rows="3" placeholder='{"name":"Example"}'></textarea>
+        <button type="submit" class="btn btn-success mt-2">Create</button>
+      </form>
+      <h5>Update</h5>
+      <form id="panels-update" class="mb-3">
+        <input id="panels-update-id" class="form-control mb-2" placeholder="ID"/>
+        <textarea id="panels-update-json" class="form-control" rows="3" placeholder='{"name":"Updated"}'></textarea>
+        <button type="submit" class="btn btn-warning mt-2">Update</button>
+      </form>
+      <h5>Delete</h5>
+      <form id="panels-delete">
+        <input id="panels-delete-id" class="form-control mb-2" placeholder="ID"/>
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
     </div>
   </section>
 </div>
 {% endblock %}
 
-{% block scripts %}
+{% block js %}
 <script type="module">
-import { get } from './assets/js/api.js';
+import { get, post, put, del } from './assets/js/api.js';
 
-get('/admin/panels')
-  .then(data => {
-    document.getElementById('panels-data').textContent = JSON.stringify(data, null, 2);
-  })
-  .catch(err => console.error(err));
+const base = '/admin/panels';
+const output = document.getElementById('panels-data');
+
+function refresh() {
+  get(base).then(data => {
+    output.textContent = JSON.stringify(data, null, 2);
+  }).catch(err => console.error(err));
+}
+
+document.getElementById('panels-list').addEventListener('click', e => {
+  e.preventDefault();
+  refresh();
+});
+
+document.getElementById('panels-create').addEventListener('submit', e => {
+  e.preventDefault();
+  try {
+    const payload = JSON.parse(document.getElementById('panels-create-json').value || '{}');
+    post(base, payload).then(refresh);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+document.getElementById('panels-update').addEventListener('submit', e => {
+  e.preventDefault();
+  const id = document.getElementById('panels-update-id').value;
+  try {
+    const payload = JSON.parse(document.getElementById('panels-update-json').value || '{}');
+    put(`${base}/${id}`, payload).then(refresh);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+document.getElementById('panels-delete').addEventListener('submit', e => {
+  e.preventDefault();
+  const id = document.getElementById('panels-delete-id').value;
+  del(`${base}/${id}`).then(refresh).catch(err => console.error(err));
+});
+
+refresh();
 </script>
 {% endblock %}

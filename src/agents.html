@@ -10,20 +10,75 @@
 <div class="page-content">
   <section class="row">
     <div class="col-12">
+      <button id="agents-list" class="btn btn-primary mb-3">List Agents</button>
       <pre id="agents-data"></pre>
+      <hr/>
+      <h5>Create</h5>
+      <form id="agents-create" class="mb-3">
+        <textarea id="agents-create-json" class="form-control" rows="3" placeholder='{"name":"Example"}'></textarea>
+        <button type="submit" class="btn btn-success mt-2">Create</button>
+      </form>
+      <h5>Update</h5>
+      <form id="agents-update" class="mb-3">
+        <input id="agents-update-id" class="form-control mb-2" placeholder="ID"/>
+        <textarea id="agents-update-json" class="form-control" rows="3" placeholder='{"name":"Updated"}'></textarea>
+        <button type="submit" class="btn btn-warning mt-2">Update</button>
+      </form>
+      <h5>Delete</h5>
+      <form id="agents-delete">
+        <input id="agents-delete-id" class="form-control mb-2" placeholder="ID"/>
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
     </div>
   </section>
 </div>
 {% endblock %}
 
-{% block scripts %}
+{% block js %}
 <script type="module">
-import { get } from './assets/js/api.js';
+import { get, post, put, del } from './assets/js/api.js';
 
-get('/admin/agents')
-  .then(data => {
-    document.getElementById('agents-data').textContent = JSON.stringify(data, null, 2);
-  })
-  .catch(err => console.error(err));
+const base = '/admin/agents';
+const output = document.getElementById('agents-data');
+
+function refresh() {
+  get(base).then(data => {
+    output.textContent = JSON.stringify(data, null, 2);
+  }).catch(err => console.error(err));
+}
+
+document.getElementById('agents-list').addEventListener('click', e => {
+  e.preventDefault();
+  refresh();
+});
+
+document.getElementById('agents-create').addEventListener('submit', e => {
+  e.preventDefault();
+  try {
+    const payload = JSON.parse(document.getElementById('agents-create-json').value || '{}');
+    post(base, payload).then(refresh);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+document.getElementById('agents-update').addEventListener('submit', e => {
+  e.preventDefault();
+  const id = document.getElementById('agents-update-id').value;
+  try {
+    const payload = JSON.parse(document.getElementById('agents-update-json').value || '{}');
+    put(`${base}/${id}`, payload).then(refresh);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+document.getElementById('agents-delete').addEventListener('submit', e => {
+  e.preventDefault();
+  const id = document.getElementById('agents-delete-id').value;
+  del(`${base}/${id}`).then(refresh).catch(err => console.error(err));
+});
+
+refresh();
 </script>
 {% endblock %}
